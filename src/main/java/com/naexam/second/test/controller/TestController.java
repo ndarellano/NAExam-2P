@@ -3,6 +3,7 @@ package com.naexam.second.test.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,14 +24,16 @@ public class TestController {
     }
 
     @GetMapping()
-    public List<TestRS> findAll() {
-        List<test> tests = testService.findAll();
-        List<TestRS> testRS = new ArrayList<>();
-        for (test test : tests) {
-            testRS.add(TestMapper.toTestRS(test));
+    public ResponseEntity<List<TestRS>> getTest() {
+        List<test> testList = testService.findAll();
+        List<TestRS> testRSList = new ArrayList<>();
+        if(testList == null || testList.isEmpty())
+            return ResponseEntity.noContent().build();
+            
+        for (test test : testList) {
+            testRSList.add(TestMapper.toTestRS(test));
         }
-        return testRS;
-        
+        return ResponseEntity.ok(testRSList);
     }
 
 }
